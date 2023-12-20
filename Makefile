@@ -20,3 +20,8 @@ generate-auth-api:
 	--go-grpc_out=pkg/auth_v1 --go-grpc_opt=paths=source_relative \
 	--plugin=protoc-gen-go-grpc=bin/protoc-gen-go-grpc \
 	api/auth_v1/auth.proto
+
+run_client:
+	go run cmd/grpc_client/main.go
+run_server:
+	go run cmd/grpc_server/main.go
