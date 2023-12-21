@@ -25,3 +25,15 @@ run_client:
 	go run cmd/grpc_client/main.go
 run_server:
 	go run cmd/grpc_server/main.go
+
+build:
+	GOOS=linux GOARCH=amd64 go build -o service_linux cmd/grpc_server/main.go
+
+copy-to-server:
+	scp service_linux root@5.159.103.37:
+
+docker-build-and-push:
+	docker buildx build --no-cache --platform linux/amd64 -t cr.selcloud.ru/k1taro/test-server:v0.0.1 .
+	docker login -u token -p CRgAAAAA88zoPyPfjijKbcdHmS0Z8Qt7v2rGIqQG cr.selcloud.ru/k1taro
+	docker push cr.selcloud.ru/k1taro/test-server:v0.0.1
+
