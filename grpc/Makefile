@@ -21,10 +21,10 @@ generate-auth-api:
 	--plugin=protoc-gen-go-grpc=bin/protoc-gen-go-grpc \
 	api/auth_v1/auth.proto
 
-#run_client:
-#	go run cmd/grpc_client/main.go
-#run_server:
-#	go run cmd/grpc_server/main.go
+run_client:
+	go run cmd/grpc_client/main.go
+run_server:
+	go run cmd/grpc_server/main.go
 
 build:
 	GOOS=linux GOARCH=amd64 go build -o service_linux cmd/grpc_server/main.go
