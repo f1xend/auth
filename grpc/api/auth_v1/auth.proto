@@ -35,7 +35,7 @@ message User {
   google.protobuf.Timestamp updated_at = 4;
 }
 
-message UpdateNoteInfo {
+message UpdateUserInfo {
   google.protobuf.StringValue name = 1;
   google.protobuf.StringValue email = 2;
 }
@@ -58,7 +58,7 @@ message GetResponse{
 
 message UpdateRequest {
   int64 id = 1;
-  UpdateNoteInfo info = 2;
+  UpdateUserInfo info = 2;
 }
 
 message DeleteRequest {

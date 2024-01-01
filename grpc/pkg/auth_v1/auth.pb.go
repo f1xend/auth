@@ -219,7 +219,7 @@ func (x *User) GetUpdatedAt() *timestamp.Timestamp {
 	return nil
 }
 
-type UpdateNoteInfo struct {
+type UpdateUserInfo struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -228,8 +228,8 @@ type UpdateNoteInfo struct {
 	Email *wrappers.StringValue `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
 }
 
-func (x *UpdateNoteInfo) Reset() {
-	*x = UpdateNoteInfo{}
+func (x *UpdateUserInfo) Reset() {
+	*x = UpdateUserInfo{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_auth_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -237,13 +237,13 @@ func (x *UpdateNoteInfo) Reset() {
 	}
 }
 
-func (x *UpdateNoteInfo) String() string {
+func (x *UpdateUserInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateNoteInfo) ProtoMessage() {}
+func (*UpdateUserInfo) ProtoMessage() {}
 
-func (x *UpdateNoteInfo) ProtoReflect() protoreflect.Message {
+func (x *UpdateUserInfo) ProtoReflect() protoreflect.Message {
 	mi := &file_auth_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -255,19 +255,19 @@ func (x *UpdateNoteInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateNoteInfo.ProtoReflect.Descriptor instead.
-func (*UpdateNoteInfo) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateUserInfo.ProtoReflect.Descriptor instead.
+func (*UpdateUserInfo) Descriptor() ([]byte, []int) {
 	return file_auth_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UpdateNoteInfo) GetName() *wrappers.StringValue {
+func (x *UpdateUserInfo) GetName() *wrappers.StringValue {
 	if x != nil {
 		return x.Name
 	}
 	return nil
 }
 
-func (x *UpdateNoteInfo) GetEmail() *wrappers.StringValue {
+func (x *UpdateUserInfo) GetEmail() *wrappers.StringValue {
 	if x != nil {
 		return x.Email
 	}
@@ -468,7 +468,7 @@ type UpdateRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	Id   int64           `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Info *UpdateNoteInfo `protobuf:"bytes,2,opt,name=info,proto3" json:"info,omitempty"`
+	Info *UpdateUserInfo `protobuf:"bytes,2,opt,name=info,proto3" json:"info,omitempty"`
 }
 
 func (x *UpdateRequest) Reset() {
@@ -510,7 +510,7 @@ func (x *UpdateRequest) GetId() int64 {
 	return 0
 }
 
-func (x *UpdateRequest) GetInfo() *UpdateNoteInfo {
+func (x *UpdateRequest) GetInfo() *UpdateUserInfo {
 	if x != nil {
 		return x.Info
 	}
@@ -596,7 +596,7 @@ var file_auth_proto_rawDesc = []byte{
 	0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52,
 	0x09, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x22, 0x76, 0x0a, 0x0e, 0x55, 0x70,
-	0x64, 0x61, 0x74, 0x65, 0x4e, 0x6f, 0x74, 0x65, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x30, 0x0a, 0x04,
+	0x64, 0x61, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x30, 0x0a, 0x04,
 	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x67, 0x6f, 0x6f,
 	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72,
 	0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x32,
@@ -617,7 +617,7 @@ var file_auth_proto_rawDesc = []byte{
 	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
 	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x12, 0x2b, 0x0a,
 	0x04, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x61, 0x75,
-	0x74, 0x68, 0x5f, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4e, 0x6f, 0x74, 0x65,
+	0x74, 0x68, 0x5f, 0x76, 0x31, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72,
 	0x49, 0x6e, 0x66, 0x6f, 0x52, 0x04, 0x69, 0x6e, 0x66, 0x6f, 0x22, 0x1f, 0x0a, 0x0d, 0x44, 0x65,
 	0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69,
 	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x2a, 0x1b, 0x0a, 0x04, 0x52,
@@ -661,7 +661,7 @@ var file_auth_proto_goTypes = []interface{}{
 	(Role)(0),                    // 0: auth_v1.Role
 	(*UserInfo)(nil),             // 1: auth_v1.UserInfo
 	(*User)(nil),                 // 2: auth_v1.User
-	(*UpdateNoteInfo)(nil),       // 3: auth_v1.UpdateNoteInfo
+	(*UpdateUserInfo)(nil),       // 3: auth_v1.UpdateUserInfo
 	(*CreateRequest)(nil),        // 4: auth_v1.CreateRequest
 	(*CreateResponse)(nil),       // 5: auth_v1.CreateResponse
 	(*GetRequest)(nil),           // 6: auth_v1.GetRequest
@@ -677,11 +677,11 @@ var file_auth_proto_depIdxs = []int32{
 	1,  // 1: auth_v1.User.info:type_name -> auth_v1.UserInfo
 	10, // 2: auth_v1.User.created_at:type_name -> google.protobuf.Timestamp
 	10, // 3: auth_v1.User.updated_at:type_name -> google.protobuf.Timestamp
-	11, // 4: auth_v1.UpdateNoteInfo.name:type_name -> google.protobuf.StringValue
-	11, // 5: auth_v1.UpdateNoteInfo.email:type_name -> google.protobuf.StringValue
+	11, // 4: auth_v1.UpdateUserInfo.name:type_name -> google.protobuf.StringValue
+	11, // 5: auth_v1.UpdateUserInfo.email:type_name -> google.protobuf.StringValue
 	1,  // 6: auth_v1.CreateRequest.info:type_name -> auth_v1.UserInfo
 	2,  // 7: auth_v1.GetResponse.user:type_name -> auth_v1.User
-	3,  // 8: auth_v1.UpdateRequest.info:type_name -> auth_v1.UpdateNoteInfo
+	3,  // 8: auth_v1.UpdateRequest.info:type_name -> auth_v1.UpdateUserInfo
 	4,  // 9: auth_v1.UserV1.Create:input_type -> auth_v1.CreateRequest
 	6,  // 10: auth_v1.UserV1.Get:input_type -> auth_v1.GetRequest
 	8,  // 11: auth_v1.UserV1.Update:input_type -> auth_v1.UpdateRequest
@@ -728,7 +728,7 @@ func file_auth_proto_init() {
 			}
 		}
 		file_auth_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateNoteInfo); i {
+			switch v := v.(*UpdateUserInfo); i {
 			case 0:
 				return &v.state
 			case 1:
