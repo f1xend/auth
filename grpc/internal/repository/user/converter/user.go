@@ -1,37 +1,24 @@
 package converter
 
 import (
-	"github.com/f1xend/auth/internal/repository/user/model"
-	desc "github.com/f1xend/auth/pkg/auth_v1"
-	"google.golang.org/protobuf/types/known/timestamppb"
+	"github.com/f1xend/auth/internal/model"
+	modelRepo "github.com/f1xend/auth/internal/repository/user/model"
 )
 
-func ToUserFromRepo(user *model.User) *desc.User {
-	var updatedAt *timestamppb.Timestamp
-	if user.UpdatedAt.Valid {
-		updatedAt = timestamppb.New(user.UpdatedAt.Time)
-	}
-
-	return &desc.User{
-		Id:        user.ID,
+func ToUserFromRepo(user *modelRepo.User) *model.User {
+	return &model.User{
+		ID:        user.ID,
 		Info:      ToUserInfoFromRepo(user.Info),
-		CreatedAt: timestamppb.New(user.CreatedAt),
-		UpdatedAt: updatedAt,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
 	}
 }
 
-func ToUserInfoFromRepo(info *model.Info) *desc.UserInfo {
-	var roleAdmin desc.Role
-	if info.Role == true {
-		roleAdmin = desc.Role_admin
-	} else {
-		roleAdmin = desc.Role_user
-	}
-	return &desc.UserInfo{
-		Name:            info.Name,
-		Email:           info.Email,
-		Password:        info.Password,
-		PasswordConfirm: info.Password,
-		Role:            roleAdmin,
+func ToUserInfoFromRepo(info modelRepo.Info) model.UserInfo {
+	return model.UserInfo{
+		Name:     info.Name,
+		Email:    info.Email,
+		Password: info.Password,
+		Role:     info.Role,
 	}
 }

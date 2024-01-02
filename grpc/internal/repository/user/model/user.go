@@ -7,7 +7,7 @@ import (
 
 type User struct {
 	ID        int64        `db:"id"`
-	Info      *Info        `db:""`
+	Info      Info         `db:""`
 	CreatedAt time.Time    `db:"created_at"`
 	UpdatedAt sql.NullTime `db:"updated_at"`
 }

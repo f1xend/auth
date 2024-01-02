@@ -3,10 +3,10 @@ package user
 import (
 	"context"
 	sq "github.com/Masterminds/squirrel"
+	"github.com/f1xend/auth/internal/model"
 	"github.com/f1xend/auth/internal/repository"
 	"github.com/f1xend/auth/internal/repository/user/converter"
-	"github.com/f1xend/auth/internal/repository/user/model"
-	desc "github.com/f1xend/auth/pkg/auth_v1"
+	modelRepo "github.com/f1xend/auth/internal/repository/user/model"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"log"
 )
@@ -31,12 +31,8 @@ func NewRepository(db *pgxpool.Pool) repository.UserRepository {
 	return &repo{db: db}
 }
 
-func (r *repo) Create(ctx context.Context, req *desc.UserInfo) (int64, error) {
+func (r *repo) Create(ctx context.Context, req *model.UserInfo) (int64, error) {
 	// Делаем запрос на вставку записи в таблицу auth
-	var role bool
-	if req.Role == desc.Role_admin {
-		role = true
-	}
 	builder := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
 		Columns(nameColumn, emailColumn, passwordColumn, roleColumn).
@@ -44,7 +40,7 @@ func (r *repo) Create(ctx context.Context, req *desc.UserInfo) (int64, error) {
 			req.Name,
 			req.Email,
 			req.Password,
-			role,
+			req.Role,
 		).
 		Suffix("RETURNING id")
 
@@ -63,7 +59,7 @@ func (r *repo) Create(ctx context.Context, req *desc.UserInfo) (int64, error) {
 	return userID, nil
 }
 
-func (r *repo) Get(ctx context.Context, id int64) (*desc.User, error) {
+func (r *repo) Get(ctx context.Context, id int64) (*model.User, error) {
 	log.Printf("User id: %d", id)
 
 	builderSelectOne := sq.Select(
@@ -78,16 +74,19 @@ func (r *repo) Get(ctx context.Context, id int64) (*desc.User, error) {
 		log.Fatalf("failed to build query: %v", err)
 	}
 
-	info := model.Info{}
-	user := model.User{
-		Info: &info,
-	}
+	var user modelRepo.User
 
 	log.Println(ctx, query, args)
 
 	err = r.db.QueryRow(ctx, query, args...).
-		Scan(&user.ID, &user.Info.Name, &user.Info.Email, &user.Info.Password, &user.Info.Role,
-			&user.CreatedAt, &user.UpdatedAt)
+		Scan(&user.ID,
+			&user.Info.Name,
+			&user.Info.Email,
+			&user.Info.Password,
+			&user.Info.Role,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		)
 	if err != nil {
 		log.Fatalf("failed to select user %v", err)
 	}
