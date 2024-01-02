@@ -41,7 +41,6 @@ local-migration-down:
 create_t:
 	$(LOCAL_BIN)/goose -dir ${LOCAL_MIGRATION_DIR} create create_user_table sql
 
-
 run_client:
 	go run cmd/grpc_client/main.go
 run_server:

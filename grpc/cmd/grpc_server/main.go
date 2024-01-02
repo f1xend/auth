@@ -2,115 +2,50 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"flag"
-	sq "github.com/Masterminds/squirrel"
 	"github.com/f1xend/auth/internal/config"
 	"github.com/f1xend/auth/internal/config/env"
+	"github.com/f1xend/auth/internal/repository"
+	"github.com/f1xend/auth/internal/repository/user"
 	desc "github.com/f1xend/auth/pkg/auth_v1"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"log"
 	"net"
-	"time"
 )
 
 var configPath string
 
 func init() {
-	flag.StringVar(&configPath, "config-path", ".env", "path to config file")
+	flag.StringVar(&configPath, "config-path", "prod.env", "path to config file")
 }
 
-type server struct {
+type Server struct {
 	desc.UnimplementedUserV1Server
-	pool *pgxpool.Pool
+	userRepository repository.UserRepository
 }
 
-func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
-	// Делаем запрос на вставку записи в таблицу auth
-	builderInsert := sq.Insert("users").
-		PlaceholderFormat(sq.Dollar).
-		Columns("name", "email, password, role").
-		Values(
-			req.Info.Name,
-			req.Info.Email,
-			req.Info.Password,
-			req.Info.Role,
-		).
-		Suffix("RETURNING id")
-
-	query, args, err := builderInsert.ToSql()
+func (s *Server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
+	id, err := s.userRepository.Create(ctx, req.GetInfo())
 	if err != nil {
-		log.Fatalf("failed to build query: %v", err)
-	}
 
-	var userID int64
-	if err = s.pool.QueryRow(ctx, query, args...).Scan(&userID); err != nil {
-		log.Fatalf("failed to insert user: %v", err)
+		return nil, err
 	}
-
-	log.Printf("inserted user with id %d", userID)
 
 	return &desc.CreateResponse{
-		Id: userID,
+		Id: id,
 	}, nil
 }
 
-func (s *server) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
-	log.Printf("User id: %d", req.GetId())
-
-	builderSelectOne := sq.Select("id", "name", "email", "password", "role", "created_at", "updated_at").
-		From("users").
-		PlaceholderFormat(sq.Dollar).
-		Where(sq.Eq{"id": req.GetId()}).
-		Limit(1)
-
-	query, args, err := builderSelectOne.ToSql()
+func (s *Server) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
+	userObj, err := s.userRepository.Get(ctx, req.GetId())
 	if err != nil {
-		log.Fatalf("failed to build query: %v", err)
-	}
-
-	var userID int64
-	var name, email, password string
-	var createdAt time.Time
-	var updatedAt sql.NullTime
-	var role bool
-
-	if err = s.pool.QueryRow(ctx, query, args...).
-		Scan(&userID, &name, &email, &password, &role, &createdAt, &updatedAt); err != nil {
-		log.Fatalf("failed to select user %v", err)
-	}
-
-	log.Printf("id: %d, name: %s, email: %s, password: %s, created_at: %s, updated_at: %s",
-		userID, name, email, password, createdAt, updatedAt)
-
-	var updateAtTime *timestamppb.Timestamp
-	if updatedAt.Valid {
-		updateAtTime = timestamppb.New(updatedAt.Time)
-	}
-
-	var roleAdmin desc.Role
-	if role == true {
-		roleAdmin = desc.Role_admin
-	} else {
-		roleAdmin = desc.Role_user
+		return nil, err
 	}
 
 	return &desc.GetResponse{
-		User: &desc.User{
-			Id: userID,
-			Info: &desc.UserInfo{
-				Name:            name,
-				Email:           email,
-				Password:        password,
-				PasswordConfirm: password,
-				Role:            roleAdmin,
-			},
-			CreatedAt: timestamppb.New(createdAt),
-			UpdatedAt: updateAtTime,
-		},
+		User: userObj,
 	}, nil
 }
 
@@ -146,12 +81,15 @@ func main() {
 	}
 	defer pool.Close()
 
+	// создаю репозиторий
+	userRepo := user.NewRepository(pool)
+
 	// создаю сервер
 	s := grpc.NewServer()
 	reflection.Register(s)
-	desc.RegisterUserV1Server(s, &server{pool: pool})
+	desc.RegisterUserV1Server(s, &Server{userRepository: userRepo})
 
-	log.Printf("server listening at %v", lis.Addr())
+	log.Printf("Server listening at %v", lis.Addr())
 
 	if err = s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

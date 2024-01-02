@@ -5,6 +5,20 @@ volumes:
   postgres_volume_prod:
 
 services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    depends_on:
+      - migrator-prod
+    env_file:
+      - prod.env
+    environment:
+      DB_HOST: pg-prod
+    networks:
+      - auth-service
+
   pg-local:
     image: postgres:14-alpine3.17
     env_file:
@@ -13,6 +27,8 @@ services:
       - "54321:5432"
     volumes:
       - postgres_volume_local:/var/lib/postgresql/data
+    networks:
+      - auth-service
 
   pg-prod:
     image: postgres:14-alpine3.17
@@ -22,6 +38,8 @@ services:
       - "54320:5432"
     volumes:
       - postgres_volume_prod:/var/lib/postgresql/data
+    networks:
+      - auth-service
 
   migrator-local:
     build:
@@ -34,6 +52,8 @@ services:
       - .env
     environment:
       DB_HOST: pg-local
+    networks:
+      - auth-service
 
   migrator-prod:
     build:
@@ -44,3 +64,9 @@ services:
       - prod.env
     environment:
       DB_HOST: pg-prod
+    networks:
+      - auth-service
+
+networks:
+  auth-service:
+    driver: bridge
