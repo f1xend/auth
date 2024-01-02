@@ -3,11 +3,11 @@ package user
 import (
 	"context"
 	sq "github.com/Masterminds/squirrel"
+	"github.com/f1xend/auth/internal/client/db"
 	"github.com/f1xend/auth/internal/model"
 	"github.com/f1xend/auth/internal/repository"
 	"github.com/f1xend/auth/internal/repository/user/converter"
 	modelRepo "github.com/f1xend/auth/internal/repository/user/model"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"log"
 )
 
@@ -24,10 +24,10 @@ const (
 )
 
 type repo struct {
-	db *pgxpool.Pool
+	db db.Client
 }
 
-func NewRepository(db *pgxpool.Pool) repository.UserRepository {
+func NewRepository(db db.Client) repository.UserRepository {
 	return &repo{db: db}
 }
 
@@ -46,12 +46,17 @@ func (r *repo) Create(ctx context.Context, req *model.UserInfo) (int64, error) {
 
 	query, args, err := builder.ToSql()
 	if err != nil {
-		log.Fatalf("failed to build query: %v", err)
+		return 0, err
+	}
+
+	q := db.Query{
+		Name:     "user_repository.Create",
+		QueryRaw: query,
 	}
 
 	var userID int64
-	if err = r.db.QueryRow(ctx, query, args...).Scan(&userID); err != nil {
-		log.Fatalf("failed to insert user: %v", err)
+	if err = r.db.DB().QueryRowContext(ctx, q, args...).Scan(&userID); err != nil {
+		return 0, err
 	}
 
 	log.Printf("inserted user with id %d", userID)
@@ -71,29 +76,19 @@ func (r *repo) Get(ctx context.Context, id int64) (*model.User, error) {
 
 	query, args, err := builderSelectOne.ToSql()
 	if err != nil {
-		log.Fatalf("failed to build query: %v", err)
+		return nil, err
 	}
 
 	var user modelRepo.User
 
-	log.Println(ctx, query, args)
-
-	err = r.db.QueryRow(ctx, query, args...).
-		Scan(&user.ID,
-			&user.Info.Name,
-			&user.Info.Email,
-			&user.Info.Password,
-			&user.Info.Role,
-			&user.CreatedAt,
-			&user.UpdatedAt,
-		)
-	if err != nil {
-		log.Fatalf("failed to select user %v", err)
+	q := db.Query{
+		Name:     "user_repository.Get",
+		QueryRaw: query,
 	}
-	//
-	//log.Printf("id: %d, name: %s, email: %s, password: %s, created_at: %s, updated_at: %s",
-	//	user.ID, user.Info.Name, user.Info.Email, user.Info.Password,
-	//	user.CreatedAt, user.UpdatedAt)
+
+	if err = r.db.DB().ScanOneContext(ctx, &user, q, args...); err != nil {
+		return nil, err
+	}
 
 	return converter.ToUserFromRepo(&user), nil
 }
