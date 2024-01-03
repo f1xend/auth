@@ -18,3 +18,13 @@ type UserInfo struct {
 	Password string `db:"password"`
 	Role     bool   `db:"role"`
 }
+
+type UpdateUser struct {
+	ID   int64          `db:"id"`
+	info UpdateUserInfo `db:""`
+}
+
+type UpdateUserInfo struct {
+	Name  string `db:"name"`
+	Email string `db:"email"`
+}

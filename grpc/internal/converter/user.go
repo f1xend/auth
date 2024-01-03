@@ -4,6 +4,7 @@ import (
 	"github.com/f1xend/auth/internal/model"
 	desc "github.com/f1xend/auth/pkg/auth_v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"log"
 )
 
 func ToUserFromService(user *model.User) *desc.User {
@@ -56,5 +57,22 @@ func ToUserInfoFromDesc(info *desc.UserInfo) *model.UserInfo {
 		Email:    info.Email,
 		Password: info.Password,
 		Role:     role,
+	}
+}
+
+func ToUserUpdateFromDesc(user *desc.UpdateRequest) *model.UpdateUser {
+	return &model.UpdateUser{
+		ID:   user.Id,
+		Info: *ToUserUpdateInfoFromDesc(*user.Info),
+	}
+}
+
+func ToUserUpdateInfoFromDesc(user desc.UpdateUserInfo) *model.UpdateUserInfo {
+	log.Println(user.GetName().GetValue(), user.GetEmail().GetValue())
+
+	return &model.UpdateUserInfo{
+
+		Name:  user.Name.GetValue(),
+		Email: user.Email.GetValue(),
 	}
 }

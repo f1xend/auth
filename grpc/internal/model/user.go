@@ -18,3 +18,13 @@ type UserInfo struct {
 	Password string
 	Role     bool
 }
+
+type UpdateUser struct {
+	ID   int64
+	Info UpdateUserInfo
+}
+
+type UpdateUserInfo struct {
+	Name  string
+	Email string
+}
