@@ -3,7 +3,6 @@ package user
 import (
 	"context"
 	"github.com/f1xend/auth/internal/model"
-	"log"
 )
 
 func (s *serv) Get(ctx context.Context, id int64) (*model.User, error) {
@@ -12,8 +11,8 @@ func (s *serv) Get(ctx context.Context, id int64) (*model.User, error) {
 		return nil, err
 	}
 
-	log.Printf("id: %d, name: %s, email: %s, password: %s, created_at: %s, updated_at: %s",
-		user.ID, user.Info.Name, user.Info.Email, user.Info.Password,
-		user.CreatedAt, user.UpdatedAt)
+	//log.Printf("id: %d, name: %s, email: %s, password: %s, created_at: %s, updated_at: %s",
+	//	user.ID, user.Info.Name, user.Info.Email, user.Info.Password,
+	//	user.CreatedAt, user.UpdatedAt)
 	return user, nil
 }
