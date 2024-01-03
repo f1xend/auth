@@ -1,3 +1,6 @@
 /grpc/bin/
 /config/bin/
 /postgres/bin/
+/config/
+/postgres/
+/config/
