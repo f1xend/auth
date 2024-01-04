@@ -19,3 +19,16 @@ func NewService(userRepository repository.UserRepository, txManager db.TxManager
 		txManager:      txManager,
 	}
 }
+
+func NewMockService(deps ...interface{}) service.UserService {
+	srv := serv{}
+
+	for _, v := range deps {
+		switch s := v.(type) {
+		case repository.UserRepository:
+			srv.userRepository = s
+		}
+	}
+
+	return &srv
+}
