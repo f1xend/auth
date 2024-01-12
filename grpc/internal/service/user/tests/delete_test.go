@@ -14,6 +14,7 @@ import (
 )
 
 func TestDelete(t *testing.T) {
+	t.Parallel()
 	type userRepositoryMockFunc func(mc *minimock.Controller) repository.UserRepository
 
 	type args struct {

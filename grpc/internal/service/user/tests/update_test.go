@@ -15,6 +15,7 @@ import (
 )
 
 func TestUpdate(t *testing.T) {
+	t.Parallel()
 	type userRepositoryMockFunc func(mc *minimock.Controller) repository.UserRepository
 
 	type args struct {
@@ -42,7 +43,7 @@ func TestUpdate(t *testing.T) {
 			Info: info,
 		}
 	)
-	defer t.Cleanup(mc.Finish)
+	t.Cleanup(mc.Finish)
 
 	tests := []struct {
 		name               string
