@@ -3,16 +3,16 @@ package app
 import (
 	"context"
 	"github.com/f1xend/auth/internal/api/user"
-	"github.com/f1xend/auth/internal/client/db"
-	"github.com/f1xend/auth/internal/client/db/pg"
-	"github.com/f1xend/auth/internal/client/db/transaction"
-	"github.com/f1xend/auth/internal/closer"
 	"github.com/f1xend/auth/internal/config"
 	"github.com/f1xend/auth/internal/config/env"
 	"github.com/f1xend/auth/internal/repository"
 	userRepository "github.com/f1xend/auth/internal/repository/user"
 	"github.com/f1xend/auth/internal/service"
 	userService "github.com/f1xend/auth/internal/service/user"
+	"github.com/f1xend/platform-common/pkg/closer"
+	"github.com/f1xend/platform-common/pkg/db"
+	"github.com/f1xend/platform-common/pkg/db/pg"
+	"github.com/f1xend/platform-common/pkg/db/transaction"
 	"log"
 )
 

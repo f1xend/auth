@@ -3,11 +3,11 @@ package user
 import (
 	"context"
 	sq "github.com/Masterminds/squirrel"
-	"github.com/f1xend/auth/internal/client/db"
 	"github.com/f1xend/auth/internal/model"
 	"github.com/f1xend/auth/internal/repository"
 	"github.com/f1xend/auth/internal/repository/user/converter"
 	modelRepo "github.com/f1xend/auth/internal/repository/user/model"
+	"github.com/f1xend/platform-common/pkg/db"
 	"github.com/pkg/errors"
 	"log"
 )

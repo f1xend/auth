@@ -3,9 +3,9 @@ package app
 import (
 	"context"
 	"flag"
-	"github.com/f1xend/auth/internal/closer"
 	"github.com/f1xend/auth/internal/config"
 	desc "github.com/f1xend/auth/pkg/auth_v1"
+	"github.com/f1xend/platform-common/pkg/closer"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
