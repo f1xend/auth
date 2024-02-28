@@ -16,4 +16,4 @@ ADD prod.env .
 
 RUN chmod +x migration_prod.sh
 
-ENTRYPOINT ["./migration_prod.sh"]
+ENTRYPOINT ["bash", "migration_prod.sh"]

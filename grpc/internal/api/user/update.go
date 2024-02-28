@@ -8,6 +8,10 @@ import (
 )
 
 func (s *Server) Update(ctx context.Context, req *desc.UpdateRequest) (*empty.Empty, error) {
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
+
 	err := s.userService.Update(ctx, converter.ToUserUpdateFromDesc(req))
 	if err != nil {
 		return nil, err

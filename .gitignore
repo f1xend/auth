@@ -4,3 +4,9 @@
 /config/
 /postgres/
 /config/
+../.idea/
+/.idea/.gitignore
+/.idea/auth.iml
+/.idea/dataSources.xml
+/.idea/modules.xml
+/.idea/vcs.xml

@@ -13,6 +13,10 @@ type PGConfig interface {
 	DSN() string
 }
 
+type HTTPConfig interface {
+	Address() string
+}
+
 func Load(path string) error {
 	if err := godotenv.Load(path); err != nil {
 		log.Fatalf("failed to load config %v", err)

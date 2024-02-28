@@ -16,5 +16,5 @@ ADD .env .
 
 RUN chmod +x migration_local.sh
 
-ENTRYPOINT ["./migration_local.sh"]
+ENTRYPOINT ["bash", "migration_local.sh"]
 
